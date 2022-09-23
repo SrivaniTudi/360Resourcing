@@ -75,7 +75,6 @@ public class Employee {
 	@Column(name = "mobileNo")
 	private long mobileNo;
 
-	@Column(name = "createdDate")
 	private LocalDateTime createdDate;
 	
 	private LocalDateTime updatedDate;
