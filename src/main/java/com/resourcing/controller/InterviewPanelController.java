@@ -163,8 +163,8 @@ public class InterviewPanelController {
 			return mac;
 		}
 	}
-	@GetMapping("/getInterviewer")
-	public String getInterviewer(Model model,InterviewPanel interviewer){
+	@GetMapping("/getInterviewer/{id}")
+	public String getInterviewer(Model model,InterviewPanel interviewer,@PathVariable(id) int interviewerId){
 		InterviewPanel inter= interService.getAllInterviewers;
 
 		model.addAttribute("inter",interviewer);
