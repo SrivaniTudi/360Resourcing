@@ -163,13 +163,13 @@ public class InterviewPanelController {
 			return mac;
 		}
 	}
-	@GetMapping(/getInterviewer)
-	public String getInterviewer(Model model,InterviewPanel interviewer){
-		InterviewPanel inter= interService.getAllInterviewers;
+	// @GetMapping("/getInterviewer")
+	// public String getInterviewer(Model model,InterviewPanel interviewer){
+	// 	InterviewPanel inter= interService.getAllInterviewers();
 
-		model.addAttribute("inter",interviewer);
-		return "interviewerList";
-	}
+	// 	model.addAttribute("inter",interviewer);
+	// 	return "interviwerList";
+	// }
 	
 
 
