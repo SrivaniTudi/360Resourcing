@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.util.StringUtils;
 
 import com.resourcing.beans.Candidate;
 import com.resourcing.beans.CandidateJdAssociation;
@@ -66,6 +68,7 @@ import com.resourcing.service.ScheduleService;
 import com.resourcing.service.SkillInterviewerAssociationService;
 import com.resourcing.service.SkillService;
 import com.resourcing.utilities.Utilities;
+
 
 @Controller
 @RequestMapping("/emp")
@@ -127,16 +130,18 @@ public class EmployeeController {
 	// employee basic validations==========================================//
 	// View loginPage with employee Mail and password
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-	public ModelAndView employeeloginPage(Employee employeeObj) {
+	public String employeeloginPage(Employee employeeObj,Model model,@RequestParam(required = false)String errorMessage) {
 		LOGGER.debug("entered into employee Controller:::: login method");
-		ModelAndView mav = new ModelAndView("employee_login_page");
-		mav.addObject("newUserDetails", employeeObj);
-		return mav;
+		model.addAttribute("newUserDetails", employeeObj);
+		if(!StringUtils.isEmpty(errorMessage))  {
+			model.addAttribute("errorMessage", errorMessage);
+			}
+			return "employee_login_page";
 	}
 
 	// validate employee by mailId and password
 	@PostMapping("/employeeValidation")
-	public ModelAndView validatemethod(@ModelAttribute("newUserDetails") Employee employeeObj,
+	public String validatemethod(@ModelAttribute("newUserDetails") Employee employeeObj,RedirectAttributes redirectAttributes,
 			HttpServletRequest request, Model model) {
 		LOGGER.debug("emp ped::" + employeeObj.getPassword());
 		String strEncPassword = Utilities.getEncryptSecurePassword(employeeObj.getPassword(), "RESOURCING");
@@ -150,26 +155,25 @@ public class EmployeeController {
 			LOGGER.debug("session object::" + session.getAttribute("employeeObj"));
 			LOGGER.debug("employee controller validation method employee mail id  is:" + employeeExist.getEmailId());
 			LOGGER.debug("employee dashboard page is displayed");
-			ModelAndView mav = new ModelAndView("employee_dashboard");
-			mav.addObject("clientsCount",
+			model.addAttribute("clientsCount",
 					employeeClientAssociationService.findClientsByEmployeeId(employeeExist).size());
 			List<EmployeeClientAssociation> ecalist = employeeClientAssociationService
 					.findClientsByEmployeeId(employeeExist);
-			mav.addObject("clientsCount", ecalist.size());
+					model.addAttribute("clientsCount", ecalist.size());
 			List<Schedule> objSchedule = scheduleService.getAllSchedulesById(employeeExist);
 			List<Schedule> selctedCandidatesList = objSchedule.stream()
 					.filter(scheduleObject -> scheduleObject.getStatus() != null
 							&& scheduleObject.getStatus().equals("SELECTED"))
 					.toList();
-			mav.addObject("selectedCandidatedCount", selctedCandidatesList.size());
+					model.addAttribute("selectedCandidatedCount", selctedCandidatesList.size());
 			LOGGER.debug("selected candidateList::count::" + selctedCandidatesList.size());
 			List<Schedule> rejctedCandidatesList = objSchedule.stream()
 					.filter(scheduleObject -> scheduleObject.getStatus() != null
 							&& scheduleObject.getStatus().equals("REJECTED"))
 					.toList();
-			mav.addObject("rejectedCandidatedCount", rejctedCandidatesList.size());
+					model.addAttribute("rejectedCandidatedCount", rejctedCandidatesList.size());
 			List<Candidate> myCandidatesList = candidateService.getCandidateListOfRecruiter(employeeExist);
-			mav.addObject("myCandidatesCount", myCandidatesList.size());
+			model.addAttribute("myCandidatesCount", myCandidatesList.size());
 			model.addAttribute("sessionEmployee", employeeExist);
 			List<EmployeeClientAssociation> ecalist1 = employeeClientAssociationService
 					.getAllEmployeeClientAssociations();
@@ -178,28 +182,27 @@ public class EmployeeController {
 			LOGGER.debug("client Count with id 18::" + eca2.size());
 			LOGGER.debug("session name::" + employeeExist.getEmailId());
 			LOGGER.debug("my candidates count" + myCandidatesList.size());
-			mav.addObject("sessionEmployee", employeeExist);
-			List<JobDescription> allJds = jobDescriptionService.getAllJobDescriptions();
+			model.addAttribute("sessionEmployee", employeeExist);
 			List<Schedule> allSchedules = scheduleService.getAllSchedulesById(employeeExist);
 			List<Schedule> todaySchedules = allSchedules.stream()
 					.filter(scheduleObj -> scheduleObj.getDate().equals(LocalDate.now()))
 					.toList();
 			LOGGER.debug("todayScheduleCount::" + todaySchedules.size());
-			mav.addObject("todaySchedulesCount", todaySchedules.size());
+			model.addAttribute("todaySchedulesCount", todaySchedules.size());
 			List<Schedule> upComingSchedules = allSchedules.stream()
 					.filter(scheduleobj -> scheduleobj.getStatus()==null && !(scheduleobj.getDate().equals(LocalDate.now())))
 					.toList();
-			mav.addObject("upComingschedules", upComingSchedules);
-			mav.addObject("upComingSchedulesCount", upComingSchedules.size());
+					model.addAttribute("upComingschedules", upComingSchedules);
+					model.addAttribute("upComingSchedulesCount", upComingSchedules.size());
 			LOGGER.debug("upComingschedulesCount:::"+upComingSchedules.size());
-			return mav;
-
+			return "employee_dashboard";
 		} else {
 			LOGGER.debug("else block of validation:::: Use valid details");
-			ModelAndView mav2 = new ModelAndView("employee_login_page");
-			mav2.addObject("newUserDetails", new Employee());
-			mav2.addObject("errorMessage", "invalid Credentials!");
-			return mav2;
+			/* model.addAttribute("newUserDetails", new Employee());
+			model.addAttribute("errorMessage", "invalid Credentials!");
+			return "employee_login_page"; */
+			redirectAttributes.addFlashAttribute("errorMessage", "invalid Credentials!");
+				return "redirect:/emp/login";
 		}
 	}
 
@@ -688,21 +691,5 @@ public class EmployeeController {
 		model.addAttribute("scheduleTable", "UpComing Schedules");
 		return "employee_schedule_list";
 	}
-	
-	
-	//testing
-	@GetMapping("/test")
-	public String testLogin(String error,String logout,Model model) {
-		 if (error != null)
-	            model.addAttribute("error", "Your username and password is invalid.");
-	        if (logout != null)
-	            model.addAttribute("message", "You have been logged out successfully.");
-		return "aaa";
-	}
-	
-	
-	
-	
-	
 	
 }

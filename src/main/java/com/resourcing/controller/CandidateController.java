@@ -193,6 +193,7 @@ public class CandidateController {
 		candidateObj.setUpdatedDate(LocalDateTime.now());
 		candidateObj.setCreatedDate(existCandidate.getCreatedDate());
 		candidateObj.setCreatedBy(existCandidate.getCandidateId());
+		candidateObj.setEmployeeObj(existCandidate.getEmployeeObj());
 		LocalDate currentDate = LocalDate.now();
 		Period period = Period.between(candidateObj.getDateOfBirth(), currentDate);
 		candidateObj.setAge(period.getYears() + " years " + period.getMonths() + " months " + period.getDays() + " days");
