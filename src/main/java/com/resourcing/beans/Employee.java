@@ -75,8 +75,10 @@ public class Employee {
 	@Column(name = "mobileNo")
 	private long mobileNo;
 
+	@Column(name="createdDate")
 	private LocalDateTime createdDate;
 	
+	@Column(name="updatedDate")
 	private LocalDateTime updatedDate;
 	
 	private String isActive;
