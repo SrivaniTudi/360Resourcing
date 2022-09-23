@@ -125,7 +125,7 @@ public class CandidateController {
 			@RequestParam(required = false) String message,
 			final HttpServletResponse response, HttpSession session) {
 		LOGGER.debug("add candidate::::");
-		
+		LOGGER.debug("add candidate success::::");
 		final StringBuffer url1 = request.getRequestURL();
 		HttpSession sessionOne = request.getSession();
 		sessionOne.setAttribute("url", url1);
