@@ -399,7 +399,6 @@ public class EmployeeController {
 		LOGGER.debug("employeeName is::" + employee.getEmployeeName());
 		employeeService.updateEmployee(employee);
 		LOGGER.debug(" Employee fields are updated sucessfully");
-		LOGGER.debug("employee details updated sucessfully");
 		return mav;
 	}
 
@@ -410,7 +409,6 @@ public class EmployeeController {
 		Employee employee=(Employee)session.getAttribute("employeeObj");
 		List<EmployeeClientAssociation> ClientListForEmployee = employeeClientAssociationService
 				.findClientsByEmployeeId(employee);
-		LOGGER.debug("my clients::"+ClientListForEmployee.size());
 		LOGGER.debug("employee client association list::::" + ClientListForEmployee);
 		model.addAttribute("clientList", ClientListForEmployee);
 		model.addAttribute("TableName", ClientListForEmployee.size()+" clients are ASSIGNED!!");
@@ -445,7 +443,7 @@ public class EmployeeController {
 
 	@GetMapping("/feedbackList/{id}")
 	public String feedbackList(Model model, @PathVariable int id, HttpSession session) {
-		LOGGER.debug("method invoked:::::::::");
+		LOGGER.debug("feedbackList/{id}::method invoked:::::::::");
 		Employee employee = (Employee) session.getAttribute("employeeObj");
 		List<Schedule> objSchedule = scheduleService.finalFeedbackList(employee);
 		model.addAttribute("scheduleList", objSchedule);
@@ -474,7 +472,7 @@ public class EmployeeController {
 
 	@GetMapping("/candidate/docList/{candidateId}")
 	public String ListOfCandidateDocs(Model model, @PathVariable int candidateId) {
-		LOGGER.debug("cnadudate Id for doc list::" + candidateId);
+		LOGGER.debug("candidate/docList/{candidateId}:: method Inkvoked");
 		LOGGER.debug("candidateId in list method:::::" + candidateId);
 		Candidate candidate = candidateService.getCandidateById(candidateId);
 		List<Doc> docs = docStorageService.getAllFilesById(candidateId);
@@ -486,8 +484,7 @@ public class EmployeeController {
 	@GetMapping("/candidate/downloadFile/{fileId}")
 	public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Integer fileId) throws Exception {
 		Doc doc = docStorageService.getFileById(fileId);
-		LOGGER.debug("download candidate documents:::");
-
+		LOGGER.debug("candidate/downloadFile/{fileId}:: method invoked");
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(doc.getDocType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + doc.getDocName() + "\"")
 				.body(new ByteArrayResource(doc.getData()));
@@ -698,11 +695,8 @@ public class EmployeeController {
 	public String testLogin(String error,String logout,Model model) {
 		 if (error != null)
 	            model.addAttribute("error", "Your username and password is invalid.");
-
 	        if (logout != null)
 	            model.addAttribute("message", "You have been logged out successfully.");
-	        
-	        
 		return "aaa";
 	}
 	
