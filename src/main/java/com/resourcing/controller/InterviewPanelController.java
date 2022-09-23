@@ -163,7 +163,7 @@ public class InterviewPanelController {
 			return mac;
 		}
 	}
-	@GetMapping("/getInterviewer")
+	@GetMapping(/getInterviewer)
 	public String getInterviewer(Model model,InterviewPanel interviewer){
 		InterviewPanel inter= interService.getAllInterviewers;
 
