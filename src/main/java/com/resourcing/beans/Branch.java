@@ -58,7 +58,7 @@ public class Branch {
 	public long mobileNo;
 
 	@Column(name = "isActive")
-	private String isActive;
+	private String isActive = "Y";
 
 	@Column(name = "createdBy")
 	public int createdBy;
@@ -73,7 +73,7 @@ public class Branch {
 	private double longitude;
 
 	@Column(name = "createdDate", insertable = false, updatable = false)
-	private LocalDateTime createdDate;
+	private LocalDateTime createdDate =LocalDateTime.now();
 
 	private LocalDateTime updatedDate;
 
