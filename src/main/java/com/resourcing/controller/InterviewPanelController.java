@@ -166,7 +166,7 @@ public class InterviewPanelController {
 	@GetMapping("/getInterviewer/{id}")
 	public String getInterviewer(Model model,InterviewPanel interviewer,@PathVariable(id) int interviewerId){
 		InterviewPanel inter= interService.getAllInterviewers;
-		InterviewPanel interviewer= interService.getInterviewerById;
+		//InterviewPanel interviewer= interService.getInterviewerById;
 
 		model.addAttribute("inter",interviewer);
 		return "interviewerList";
