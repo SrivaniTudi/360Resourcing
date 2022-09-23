@@ -48,13 +48,13 @@ public class AdminUser {
 	private String userCaptcha;
 
 	@Column(name = "isActive")
-	private String isActive = "Y";
+	private String isActive;
 
 	@Column(name = "createdBy", nullable = false)
 	private int createdBy;
 
 	@Basic(optional = false)
-	private LocalDateTime createdDate =LocalDateTime.now();
+	private LocalDateTime createdDate;
 
 	@Column(name = "updatedBy", nullable = true)
 	private String updatedBy;
